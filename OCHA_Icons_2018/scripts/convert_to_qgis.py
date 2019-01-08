@@ -26,6 +26,9 @@ for file in files:
     tree = ET.parse(sourceFile)
     root = tree.getroot()
 
+    enlargedViewbox = helpers.enlargeViewboxSize(root.get('viewBox'), 1)
+    root.set('viewBox', enlargedViewbox)
+
     for element in root.iter():
         if element.tag in uriPrefixedTags:
             element.attrib.pop('class', None)

@@ -6,9 +6,10 @@ def enlargeViewboxSize(viewbox, margin):
     '''
 
     sizeStrings = viewbox.split()
+
     result = ''
-    result += str(int(sizeStrings[0]) - margin) + ' '
-    result += str(int(sizeStrings[1]) - margin) + ' '
-    result += str(int(sizeStrings[2]) + margin) + ' '
-    result += str(int(sizeStrings[3]) + margin)
+    result += str(int(float(sizeStrings[0])) - margin) + ' '
+    result += str(int(float(sizeStrings[1])) - margin) + ' '
+    result += str(int(float(sizeStrings[2])) + margin) + ' '
+    result += str(int(float(sizeStrings[3])) + margin)
     return result
