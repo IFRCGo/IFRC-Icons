@@ -1,21 +1,35 @@
 import os
+import xml.etree.ElementTree as ET
+import helpers
 
 sourceDir = '../original_un_blue_versions/svg'
-destDir = '../qgis_versions/svg'
+destDir = '../qgis_versions_ETparser_test/svg'
+
+svgNs = 'http://www.w3.org/2000/svg'
+ET.register_namespace('', svgNs)
 
 files = os.listdir(sourceDir)
+
+tags = ('path', 'polygon', 'circle', 'rect')
+uriPrefixedTags = ['{{{0}}}'.format(svgNs) + s for s in tags]
+
+qgisStylingAttributes = {'fill': 'param(fill)',
+                     'stroke': 'param(outline)',
+                     'stroke-width': 'param(outline-width) 0'}
+
 for file in files:
     sourceFile = os.path.join(sourceDir, file)
     destFile = os.path.join(destDir, file)
     #print(sourceFile)
     #print(destFile)
 
-    with open(sourceFile) as file:
-        s = file.read()
-    s = s.replace('<path class="cls-1"', '<path fill="param(fill)" stroke="param(outline)" stroke-width="param(outline-width) 0" ')
-    s = s.replace('<polygon class="cls-1"', '<polygon fill="param(fill)" stroke="param(outline)" stroke-width="param(outline-width) 0" ')
-    s = s.replace('<circle class="cls-1"', '<circle fill="param(fill)" stroke="param(outline)" stroke-width="param(outline-width) 0" ')
-    s = s.replace('<circle class="cls-2"', '<circle fill="param(fill)" stroke="param(outline)" stroke-width="param(outline-width) 0" ')
-    s = s.replace('<rect class="cls-1"', '<rect fill="param(fill)" stroke="param(outline)" stroke-width="param(outline-width) 0" ')
-    with open(destFile, "w") as file:
-        file.write(s)
+    tree = ET.parse(sourceFile)
+    root = tree.getroot()
+
+    for element in root.iter():
+        if element.tag in uriPrefixedTags:
+            element.attrib.pop('class', None)
+            element.attrib.update(qgisStylingAttributes)
+            #print(element.attrib)
+
+    tree.write(destFile, encoding='utf-8')
