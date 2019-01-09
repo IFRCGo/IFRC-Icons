@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import helpers
 
 sourceDir = '../original_un_blue_versions/svg'
-destDir = '../qgis_versions_ETparser_test/svg'
+destDir = '../qgis_versions/svg'
 
 svgNs = 'http://www.w3.org/2000/svg'
 ET.register_namespace('', svgNs)
@@ -26,7 +26,7 @@ for file in files:
     tree = ET.parse(sourceFile)
     root = tree.getroot()
 
-    enlargedViewbox = helpers.enlargeViewboxSize(root.get('viewBox'), 10)
+    enlargedViewbox = helpers.enlargeViewboxSize(root.get('viewBox'), 2)
     root.set('viewBox', enlargedViewbox)
 
     for element in root.iter():
